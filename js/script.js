@@ -87,33 +87,43 @@ paymentForm.addEventListener('change', (e) => {
 //Form Validation Section
 const form = document.querySelector('form')
 //helper functions
-
+const nameHint = document.getElementById('name-hint');
+const emailHint = document.getElementById('email-hint');
+const ccHint = document.getElementById('cc-hint');
+const zipHint = document.getElementById('zip-hint');
+const cvvHint = document.getElementById('cvv-hint');
+const actHints = document.getElementById('activities-hint')
 const emailInput = document.getElementById('email');
 const cardNum = document.getElementById('cc-num');
-const zipCode = document.getElementById('zip')
+const zipCode = document.getElementById('zip');
+const cvvNum = document.getElementById('cvv');
+let allInputBox = document.querySelectorAll('input[type="checkbox"]');
 let checkedBox = document.querySelectorAll('input[type="checkbox"]:checked');
 
 //form validation 
 const passed = (test) => {
     let parentElement = test.parentElement;
-    parentElement.className = 'valid';
+    parentElement.classList.add('valid');
     parentElement.classList.remove('not-valid');
-    parent.lastElementChild.hidden = true;
+    parentElement.lastElementChild.style.display= 'none';
 }
 const failed = (test) => {
     let parentElement = test.parentElement;
-    parentElement.className = 'not-valid';
+    parentElement.classList.add('not-valid');
     parentElement.classList.remove('valid');
-    parent.lastElementChild.hidden = false;
+    parentElement.lastElementChild.style.display = 'block';
 }
 //name validation
 const nameVal = () => {
     const nameField = nameInput.value;
     const nameTest = /^[A-Za-z]+ ?[A-Za-z]+ ?[A-Za-z]+$/i.test(nameField);
-    if (!nameTest) {
-        failed(nameField);
+    console.log(nameField)
+    console.log(nameTest)
+    if (!nameTest || nameField.length == 0) {
+        failed(nameInput);
+        nameHint.style.display = "block";
     } else {
-        passed(nameField);
+        passed(nameInput);
     }
     return nameTest;
 }
@@ -122,66 +132,67 @@ const nameVal = () => {
 const emailVal = () => {
     const emailField = emailInput.value;
     const emailTest = /^[^@]+@[^@.]+\.[A-Z]+$/i.test(emailField);
-
-    if (!emailTest) {
-        failed(emailField);
+    console.log(emailField)
+    console.log(emailTest)
+    if (!emailTest || emailField.length == 0) {
+        failed(emailInput);
+        emailHint.style.display = "block";
     } else {
-        passed(emailField);
+        passed(emailInput);
     }
     return emailTest;
 }
 //register
 const activitesVal = () => {
-    let actTest = checkedBox > 0;
-
-    if (!actTest) {
-        failed(checkedBox);
+   if( checkedBox.length == 0) {
+        actHints.style.display = "block";
+        failed(registerCheck);
     } else {
-        passed(checkedBox);
+        passed(registerCheck);
     }
-    return actTest;
-}
+
+   }
+
+
 
 //creditcard
 const creditVal = () => {
     const ccNum = cardNum.value;
     const creditTest = /^[\d]{13,16}$/.test(ccNum);
-
-    if (!creditTest) {
-        failed(ccNum);
+    console.log(ccNum);
+    console.log(creditTest);
+    if (!creditTest || ccNum.length < 13) {
+        ccHint.style.display = "block";
+        failed(cardNum);
     } else {
-        passed(ccNum);
+        passed(cardNum);
     }
     return creditTest
 }
 const zipVal = () => {
     const zipNum = zipCode.value;
     const zipTest = /^[\d]{5}$/.test(zipNum);
-    if (!zipTest) {
-        failed(zipNum);
+    if (!zipTest || zipNum.length < 5) {
+        zipHint.style.display = "block";
+        failed(zipCode);
     } else {
-        passed(zipNum);
+        passed(zipCode);
     }
     return zipTest
 }
 const cvvVal = () => {
     const cvv = cvvNum.value;
     const cvvTest = /^[\d]{3}$/.test(cvv);
-    if (!cvvTest) {
-        failed(cvv);
+    if (!cvvTest || cvv.length < 3) {
+        cvvHint.style.display="block";
+        failed(cvvNum);
     } else {
-        passed(cvv);
+        passed(cvvNum);
     }
     return cvvTest
 }
 
-
-// const errorDisplay = ()=> {
-// //name not valid return 
-// //email not valid
-// }
 //accessibility
-let allInputBox = document.querySelectorAll('input[type="checkbox"]')
 allInputBox.forEach(e => {
     e.addEventListener('focus', function () {
         e.parentElement.className='focus';
@@ -192,21 +203,25 @@ allInputBox.forEach(e => {
 })
 
 form.addEventListener('submit', (e) => {
+    e.preventDefault() // to prevent refresh
     //if all are true submit name, email, activities
     if (!nameVal()) {
         e.preventDefault();
-    } else if (!emailVal()) {
+    } 
+    if (!emailVal()) {
         e.preventDefault();
-        
-    } else if (!activitesVal()) {
+    } 
+    if(!activitesVal()) {
         e.preventDefault();
     }
     if (paymentForm.value === 'credit-card') {
         if (!creditVal()) {
             e.preventDefault()
-        } else if (!zipVal()) {
+        } 
+        if (!zipVal()) {
             e.preventDefault()
-        } else if (!cvvVal()) {
+        } 
+        if (!cvvVal()) {
             e.preventDefault()
         }
     }
