@@ -62,21 +62,23 @@ registerCheck.addEventListener('change', () => {
 
 //Payment info section
 //set the variable to the payment select ID
-const paymentForm = document.getElementById('payment').options.value;
-const paymentOptions = document.getElementsByTagName('option').value
+const paymentForm = document.getElementById('payment')
+const credit = document.getElementById('credit-card')
+const paypal = document.getElementById('paypal')
+const bitcoin = document.getElementById('bitcoin')
 
+paypal.style.display = "none";
+bitcoin.style.display = "none";
 
-//console.log(paymentOptions)
-// paymentForm.addEventListener('change', (e)=>{
-//     const paymentValue = e.target.value;
-//     const paymentMethods = ['creditCard', 'paypal','bitcoin'];
+paymentForm.addEventListener('change', (e)=>{
+    const paymentValue = e.target.value;
+    const paymentMethods = [credit, paypal, bitcoin]
 
-//     for(let i =0; i < paymentMethods.length; i++){
-//         const paymentID = paymentMethods[i];
-//         if(paymentValue === paymentID){
-//             paymentMethods[i].hidden = false;
-//         }else{
-//             paymentMethods[i].hidden = true;
-//         }
-//     }
-// });
+    for(let i =0; i < paymentMethods.length; i++){
+        if(paymentValue === paymentMethods[i].getAttribute('id')){
+            paymentMethods[i].style.display = "block";
+        }else{
+            paymentMethods[i].style.display = "none";
+        }
+    }
+});
