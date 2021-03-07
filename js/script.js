@@ -49,18 +49,34 @@ designSelect.addEventListener('change',(e)=>{
 const registerCheck = document.getElementById('activities');
 const activitesCost = document.getElementById('activities-cost');
 //add an event listener for activities selection
-registerCheck.addEventListener('change', (e) => {
-    const dataCost = parseInt(e.target.getAttribute('data-cost'));
+registerCheck.addEventListener('change', () => {
     let totalCost = 0;
    //console.log(dataCost) 
    //for each checked i want to add to the total cost
-   let checkBoxesArray = [];
    const checkBoxList = document.querySelectorAll('input[type="checkbox"]:checked');
    for(let i = 0; i< checkBoxList.length;i++){
-       totalCost += dataCost
+       totalCost += parseInt(checkBoxList[i].getAttribute('data-cost'))
    }
-   //console.log(totalCost)
- activitesCost.innerHTML = `Total: $${totalCost}`;
+   activitesCost.innerHTML = `Total: $${totalCost}`;
 })
 
+//Payment info section
+//set the variable to the payment select ID
+const paymentForm = document.getElementById('payment').options.value;
+const paymentOptions = document.getElementsByTagName('option').value
 
+
+//console.log(paymentOptions)
+// paymentForm.addEventListener('change', (e)=>{
+//     const paymentValue = e.target.value;
+//     const paymentMethods = ['creditCard', 'paypal','bitcoin'];
+
+//     for(let i =0; i < paymentMethods.length; i++){
+//         const paymentID = paymentMethods[i];
+//         if(paymentValue === paymentID){
+//             paymentMethods[i].hidden = false;
+//         }else{
+//             paymentMethods[i].hidden = true;
+//         }
+//     }
+// });
