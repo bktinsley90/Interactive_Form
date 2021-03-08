@@ -111,7 +111,6 @@ const failed = (test) => {
     let parentElement = test.parentElement;
     parentElement.classList.add('not-valid');
     parentElement.classList.remove('valid');
-    parentElement.lastElementChild.style.display = 'block';
 }
 //name validation
 const nameVal = () => {
@@ -143,14 +142,18 @@ const emailVal = () => {
     return emailTest;
 }
 //register
+
 const activitesVal = () => {
-   if( checkedBox.length == 0) {
+    const actTest = activitesCost.value
+    console.log(actTest)
+   if( actTest > 0) {
+        passed(registerCheck);
+    } else {
         actHints.style.display = "block";
         failed(registerCheck);
-    } else {
-        passed(registerCheck);
+        
     }
-
+    return actTest
    }
 
 
@@ -207,22 +210,32 @@ form.addEventListener('submit', (e) => {
     //if all are true submit name, email, activities
     if (!nameVal()) {
         e.preventDefault();
-    } 
+    } else{
+        nameInput.classList.remove('error-border');
+    }
     if (!emailVal()) {
         e.preventDefault();
-    } 
+    } else{
+        emailInput.classList.remove('error-border')
+    }
     if(!activitesVal()) {
         e.preventDefault();
     }
     if (paymentForm.value === 'credit-card') {
         if (!creditVal()) {
             e.preventDefault()
-        } 
+        } else {
+            cardNum.classList.remove('error-border')
+        }
         if (!zipVal()) {
             e.preventDefault()
-        } 
+        } else{
+            zipCode.classList.remove('error-border')
+        }
         if (!cvvVal()) {
             e.preventDefault()
+        } else{
+            cvvNum.classList.remove('error-border')
         }
     }
 })
