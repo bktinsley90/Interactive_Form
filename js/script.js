@@ -4,7 +4,7 @@ nameInput.focus();
 //T-shirt info section
 //disable the color select element
 const colorSelect = document.getElementById('color')
-colorSelect.style.display = 'none'
+colorSelect.disabled=true
 //set variables for design and color section
 const designSelect = document.getElementById('design');
 const colorThemes = colorSelect.children;
@@ -55,7 +55,7 @@ jobRole.addEventListener('change', (e) => {
 
 //program the design select element to listen for user changes
 designSelect.addEventListener('change', (e) => {
-    colorSelect.style.display = 'block';
+    colorSelect.disabled = false;
     let themeSelect = e.target.value;
     colorThemes[0].textContent = 'Please select a color';
     color.value = 'Please select a color';
@@ -107,7 +107,6 @@ const passed = (test) => {
     let parentElement = test.parentElement;
     parentElement.classList.add('valid');
     parentElement.classList.remove('not-valid');
-    parentElement.lastElementChild.style.display= 'none';
 }
 const failed = (test) => {
     let parentElement = test.parentElement;
@@ -117,7 +116,7 @@ const failed = (test) => {
 //name validation
 const nameVal = () => {
     const nameField = nameInput.value;
-    const nameTest = /^[A-Za-z]+ ?[A-Za-z]+ ?[A-Za-z]+$/i.test(nameField);
+    const nameTest = /\s/g.test(nameField);
     if (!nameTest || nameField.length == 0) {
         failed(nameInput);
         nameHint.style.display = "block";
