@@ -1,10 +1,45 @@
 //Focus on the Name Field by default
 let nameInput = document.getElementById('name')
 nameInput.focus();
+//T-shirt info section
+//disable the color select element
+const colorSelect = document.getElementById('color')
+colorSelect.style.display = 'none'
+//set variables for design and color section
+const designSelect = document.getElementById('design');
+const colorThemes = colorSelect.children;
+//Payment info section
+//set the variable to the payment select ID
+const paymentForm = document.getElementById('payment')
+const credit = document.getElementById('credit-card')
+const paypal = document.getElementById('paypal')
+const bitcoin = document.getElementById('bitcoin')
+
+//Form Validation Section
+const form = document.querySelector('form')
+//helper functions
+const nameHint = document.getElementById('name-hint');
+const emailHint = document.getElementById('email-hint');
+const ccHint = document.getElementById('cc-hint');
+const zipHint = document.getElementById('zip-hint');
+const cvvHint = document.getElementById('cvv-hint');
+const actHints = document.getElementById('activities-hint')
+const emailInput = document.getElementById('email');
+const cardNum = document.getElementById('cc-num');
+const zipCode = document.getElementById('zip');
+const cvvNum = document.getElementById('cvv');
+const allInputBox = document.querySelectorAll('input[type="checkbox"]');
 //Job Role section
 //grab the values from HTML and store in a variable
 const jobRole = document.getElementById('title');
 const otherRole = document.getElementById('other-job-role');
+//register for activites section
+//program the register for activities section to listen for user changes 
+const registerCheck = document.getElementById('activities');
+const activitesCost = document.getElementById('activities-cost');
+let totalCost = 0;
+
+
 //otherRole should be hidden on start
 otherRole.style.display = 'none';
 //create a listener for jobrole that has a function to hide/unhide
@@ -17,19 +52,11 @@ jobRole.addEventListener('change', (e) => {
         otherRole.style.display = 'none';
     }
 });
-//T-shirt info section
-//disable the color select element
-const colorSelect = document.getElementById('color')
-colorSelect.style.display = 'none'
 
-//set variables for design and color section
-const designSelect = document.getElementById('design');
-const colorThemes = colorSelect.children;
 //program the design select element to listen for user changes
 designSelect.addEventListener('change', (e) => {
     colorSelect.style.display = 'block';
-    themeSelect = e.target.value;
-    //console.log(themeSelect)
+    let themeSelect = e.target.value;
     colorThemes[0].textContent = 'Please select a color';
     color.value = 'Please select a color';
 
@@ -45,30 +72,21 @@ designSelect.addEventListener('change', (e) => {
     }
 
 })
-//register for activites section
-//program the register for activities section to listen for user changes 
-const registerCheck = document.getElementById('activities');
-const activitesCost = document.getElementById('activities-cost');
 
 //add an event listener for activities selection
-registerCheck.addEventListener('change', () => {
-    //console.log(dataCost) 
-    let totalCost = 0;
+registerCheck.addEventListener('change', (e) => {
+    const dataCost = parseInt(e.target.getAttribute('data-cost'))
     //for each checked i want to add to the total cost
-    const checkBoxList = document.querySelectorAll('input[type="checkbox"]:checked');
-    for (let i = 0; i < checkBoxList.length; i++) {
-        totalCost += parseInt(checkBoxList[i].getAttribute('data-cost'))
+    if(e.target.checked) {
+        totalCost += dataCost;
+    }else {
+        totalCost -= dataCost;
     }
     activitesCost.innerHTML = `Total: $${totalCost}`;
+     
 })
 
-//Payment info section
-//set the variable to the payment select ID
-const paymentForm = document.getElementById('payment')
-const credit = document.getElementById('credit-card')
-const paypal = document.getElementById('paypal')
-const bitcoin = document.getElementById('bitcoin')
-
+paymentForm.value = 'credit-card'
 paypal.style.display = "none";
 bitcoin.style.display = "none";
 
@@ -84,22 +102,6 @@ paymentForm.addEventListener('change', (e) => {
         }
     }
 });
-//Form Validation Section
-const form = document.querySelector('form')
-//helper functions
-const nameHint = document.getElementById('name-hint');
-const emailHint = document.getElementById('email-hint');
-const ccHint = document.getElementById('cc-hint');
-const zipHint = document.getElementById('zip-hint');
-const cvvHint = document.getElementById('cvv-hint');
-const actHints = document.getElementById('activities-hint')
-const emailInput = document.getElementById('email');
-const cardNum = document.getElementById('cc-num');
-const zipCode = document.getElementById('zip');
-const cvvNum = document.getElementById('cvv');
-let allInputBox = document.querySelectorAll('input[type="checkbox"]');
-let checkedBox = document.querySelectorAll('input[type="checkbox"]:checked');
-
 //form validation 
 const passed = (test) => {
     let parentElement = test.parentElement;
@@ -116,8 +118,6 @@ const failed = (test) => {
 const nameVal = () => {
     const nameField = nameInput.value;
     const nameTest = /^[A-Za-z]+ ?[A-Za-z]+ ?[A-Za-z]+$/i.test(nameField);
-    console.log(nameField)
-    console.log(nameTest)
     if (!nameTest || nameField.length == 0) {
         failed(nameInput);
         nameHint.style.display = "block";
@@ -131,8 +131,6 @@ const nameVal = () => {
 const emailVal = () => {
     const emailField = emailInput.value;
     const emailTest = /^[^@]+@[^@.]+\.[A-Z]+$/i.test(emailField);
-    console.log(emailField)
-    console.log(emailTest)
     if (!emailTest || emailField.length == 0) {
         failed(emailInput);
         emailHint.style.display = "block";
@@ -142,28 +140,20 @@ const emailVal = () => {
     return emailTest;
 }
 //register
-
 const activitesVal = () => {
-    const actTest = activitesCost.value
-    console.log(actTest)
-   if( actTest > 0) {
-        passed(registerCheck);
+    let actTest = totalCost > 0
+     if(!actTest) {
+    actHints.style.display = "block";
+    failed(registerCheck);
     } else {
-        actHints.style.display = "block";
-        failed(registerCheck);
-        
+        passed(registerCheck); 
     }
     return actTest
    }
-
-
-
-//creditcard
+//Credit section
 const creditVal = () => {
     const ccNum = cardNum.value;
     const creditTest = /^[\d]{13,16}$/.test(ccNum);
-    console.log(ccNum);
-    console.log(creditTest);
     if (!creditTest || ccNum.length < 13) {
         ccHint.style.display = "block";
         failed(cardNum);
