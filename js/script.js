@@ -83,6 +83,14 @@ registerCheck.addEventListener('change', (e) => {
         totalCost -= dataCost;
     }
     activitesCost.innerHTML = `Total: $${totalCost}`;
+
+    if(totalCost ===  0) {
+        actHints.style.display = "block";
+        failed(registerCheck);
+        } else {
+            actHints.style.display = "none"
+            passed(registerCheck); 
+        }
      
 })
 
@@ -107,82 +115,105 @@ const passed = (test) => {
     let parentElement = test.parentElement;
     parentElement.classList.add('valid');
     parentElement.classList.remove('not-valid');
+
 }
 const failed = (test) => {
     let parentElement = test.parentElement;
     parentElement.classList.add('not-valid');
     parentElement.classList.remove('valid');
+    parentElement.lastElementChild.style.display = "block";
 }
 //name validation
-const nameVal = () => {
+
+const nameVal= ()=>{
     const nameField = nameInput.value;
-    const nameTest = /\s/g.test(nameField);
-    if (!nameTest || nameField.length == 0) {
-        failed(nameInput);
-        nameHint.style.display = "block";
-    } else {
-        passed(nameInput);
-    }
-    return nameTest;
+    const nameTest = /^[a-zA-Z]+ ?[a-zA-Z]*? ?[a-zA-Z]*?$/.test(nameField);
+    return nameTest
 }
+nameInput.addEventListener('keyup',(e) =>{
+
+   if(e.target.value.length === 0){
+     nameHint.style.display='block';
+     failed(nameInput); 
+    } else {
+        nameHint.style.display='none';
+        nameInput.classList.remove('error-border')
+        passed(nameInput);
+    }  
+});
 
 //email address
+
+    
 const emailVal = () => {
     const emailField = emailInput.value;
     const emailTest = /^[^@]+@[^@.]+\.[A-Z]+$/i.test(emailField);
-    if (!emailTest || emailField.length == 0) {
-        failed(emailInput);
-        emailHint.style.display = "block";
-    } else {
-        passed(emailInput);
-    }
     return emailTest;
 }
+emailInput.addEventListener('keyup', e =>{
+    if (e.target.value.length === 0) {
+        emailHint.style.display = "block";
+        failed(emailInput);
+    } else {
+        emailHint.style.display='none';
+        emailInput.classList.remove('error-border');
+        passed(emailInput);
+        
+    }
+})
 //register
 const activitesVal = () => {
     let actTest = totalCost > 0
-     if(!actTest) {
-    actHints.style.display = "block";
-    failed(registerCheck);
-    } else {
-        passed(registerCheck); 
-    }
     return actTest
    }
+
 //Credit section
+
 const creditVal = () => {
     const ccNum = cardNum.value;
-    const creditTest = /^[\d]{13,16}$/.test(ccNum);
-    if (!creditTest || ccNum.length < 13) {
+   const creditTest = /^[\d]{13,16}$/.test(ccNum);
+   return creditTest
+}
+cardNum.addEventListener('keyup', e => {
+    if (e.target.value.length < 13) {
         ccHint.style.display = "block";
         failed(cardNum);
     } else {
+        ccHint.style.display = "none";
+        cardNum.classList.remove('error-border');
         passed(cardNum);
     }
-    return creditTest
-}
+})
 const zipVal = () => {
     const zipNum = zipCode.value;
     const zipTest = /^[\d]{5}$/.test(zipNum);
-    if (!zipTest || zipNum.length < 5) {
+    return zipTest
+}
+zipCode.addEventListener('keyup', e =>{
+    if (e.target.value.length < 5) {
         zipHint.style.display = "block";
         failed(zipCode);
     } else {
+        zipHint.style.display = "none";
+        zipCode.classList.remove('error-border')
         passed(zipCode);
     }
-    return zipTest
-}
+})
 const cvvVal = () => {
     const cvv = cvvNum.value;
     const cvvTest = /^[\d]{3}$/.test(cvv);
-    if (!cvvTest || cvv.length < 3) {
+    return cvvTest
+}
+cvvNum.addEventListener('keyup', e =>{
+    if (e.target.value.length < 3) {
         cvvHint.style.display="block";
         failed(cvvNum);
     } else {
+        cvvNum.classList.remove('error-border');
+        cvvHint.style.display="none";
         passed(cvvNum);
     }
-    return cvvTest
-}
+});
 
 //accessibility
 allInputBox.forEach(e => {
@@ -195,36 +226,31 @@ allInputBox.forEach(e => {
 })
 
 form.addEventListener('submit', (e) => {
-    e.preventDefault() // to prevent refresh
     //if all are true submit name, email, activities
     if (!nameVal()) {
         e.preventDefault();
-    } else{
-        nameInput.classList.remove('error-border');
-    }
+        nameHint.style.display='block';
+    } 
     if (!emailVal()) {
         e.preventDefault();
-    } else{
-        emailInput.classList.remove('error-border')
-    }
+        emailHint.style.display = "block";
+    } 
     if(!activitesVal()) {
+        actHints.style.display = "block";
         e.preventDefault();
     }
     if (paymentForm.value === 'credit-card') {
         if (!creditVal()) {
             e.preventDefault()
-        } else {
-            cardNum.classList.remove('error-border')
-        }
+            ccHint.style.display = "block"
+        } 
         if (!zipVal()) {
             e.preventDefault()
-        } else{
-            zipCode.classList.remove('error-border')
-        }
+            zipHint.style.display = "block";
+        } 
         if (!cvvVal()) {
             e.preventDefault()
-        } else{
-            cvvNum.classList.remove('error-border')
+            cvvHint.style.display="block";
         }
     }
 })
