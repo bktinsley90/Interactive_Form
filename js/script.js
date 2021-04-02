@@ -44,7 +44,6 @@ let totalCost = 0;
 otherRole.style.display = 'none';
 //create a listener for jobrole that has a function to hide/unhide
 jobRole.addEventListener('change', (e) => {
-    e.preventDefault()
     const jobValue = e.target.value
     if (jobValue === 'other') {
         otherRole.style.display = 'block';
@@ -142,9 +141,7 @@ nameInput.addEventListener('keyup',(e) =>{
     }  
 });
 
-//email address
-
-    
+//email address    
 const emailVal = () => {
     const emailField = emailInput.value;
     const emailTest = /^[^@]+@[^@.]+\.[A-Z]+$/i.test(emailField);
@@ -168,7 +165,6 @@ const activitesVal = () => {
    }
 
 //Credit section
-
 const creditVal = () => {
     const ccNum = cardNum.value;
    const creditTest = /^[\d]{13,16}$/.test(ccNum);
